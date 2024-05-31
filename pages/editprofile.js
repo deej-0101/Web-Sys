@@ -37,6 +37,7 @@ const validationSchema = yup.object({
 });
 
 export default function EditProfile() {
+const formikContext = useFormikContext();
 const classes = useStyles();
 const handleSubmit = (values, { setSubmitting }) => {
   const formData = new FormData();
@@ -46,35 +47,36 @@ const handleSubmit = (values, { setSubmitting }) => {
 
 
   axios
-    .post("/api/update-user", formData, {
+ .post("/api/update-user", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  })
+ .then((response) => {
+    console.log(response.data);
+    setSubmitting(false);
+
+    // Update the JSON file with the form data
+    fetch("/api/update-json", {
+      method: "POST",
+      body: JSON.stringify(values),
       headers: {
-        "Content-Type": "multipart/form-data",
+        "Content-Type": "application/json",
       },
     })
-    .then((response) => {
-      console.log(response.data);
-      setSubmitting(false);
-
-      // Update the JSON file with the form data
-      fetch("/api/update-json", {
-        method: "POST",
-        body: JSON.stringify(values),
-        headers: {
-          "Content-Type": "application/json",
-        },
+     .then((response) => response.json())
+     .then((data) => {
+        console.log(data);
+        formikContext.resetForm();
       })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    })
-    .catch((error) => {
-      console.error(error);
-      setSubmitting(false);
-    });
+     .catch((error) => {
+        console.error("Error updating JSON file:", error);
+      });
+  })
+ .catch((error) => {
+    console.error("Error updating user:", error);
+    setSubmitting(false);
+  });
 };
 
   return (
@@ -103,7 +105,7 @@ const handleSubmit = (values, { setSubmitting }) => {
                       axios
                       .post("/api/update-user", formData, {
                           headers: {
-                            "Content-Type": "multipart/form-data",
+                            'Content-Type': 'ultipart/form-data',
                           },
                         })
                       .then((response) => {
