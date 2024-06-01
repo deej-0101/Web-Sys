@@ -95,7 +95,7 @@ export default function ProfilePage(props) {
             </div>
             <GridContainer justify="center">
               <Link href="/editprofile">
-                <Button color="primary" size="md" justify="center">
+                <Button color="warning" size="md" justify="center">
                     Edit Profile
                 </Button>
               </Link>

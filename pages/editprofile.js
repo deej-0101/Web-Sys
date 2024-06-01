@@ -13,13 +13,14 @@ import Parallax from "/components/Parallax/Parallax.js";
 import styles from "/styles/jss/nextjs-material-kit/pages/profilePage.js";
 import useSWR from 'swr'
 import Link from "next/link";
-
+import Check from "@material-ui/icons/Check";
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
 
+import SnackbarContent from "/components/Snackbar/SnackbarContent.js";
 // import React from 'react';
 import ReactDOM from 'react-dom';
 import { Formik, Field, Form, useField, handleSubmit, useFormikContext } from 'formik';
@@ -94,6 +95,7 @@ const handleSubmit = (values, { setSubmitting }) => {
             <GridContainer justify="center">
               <GridItem cs={12} sm={12} md={8}>
                 <h2 className={classes.title}>Edit Profile</h2>
+                
                 <Formik
                     initialValues={{ name: '', email: '', bio: '' }}
                     validationSchema={validationSchema}
@@ -134,7 +136,7 @@ const handleSubmit = (values, { setSubmitting }) => {
                     }}
                     method="post"
                   >
-                    {({ isSubmitting }) => (
+                    {({ isSubmitting, isValid }) => (
                     <Form>
                       <GridContainer>
                         <GridItem xs={12} sm={12} md={6}>
@@ -169,15 +171,23 @@ const handleSubmit = (values, { setSubmitting }) => {
                         <GridItem xs={12} sm={12} md={6}>
                      
                         </GridItem>
-                        
                       </GridContainer>
                       <GridContainer justify="center" >
                         <GridItem xs={12} md={12}>
-                            <Button type="submit" disabled={isSubmitting} color="primary">
+                            <Button type="submit" disabled={isSubmitting ||!isValid} color="warning">
                                 Submit
                             </Button>
                         </GridItem>
                       </GridContainer>
+                      {isSubmitting && (
+                          <SnackbarContent
+                            message="Profile updated successfully!"
+                            color="success"
+                            close={true}
+                            icon={Check}
+                            duration={3000}
+                          />
+                          )}
                     </Form>
                   )}
                 </Formik>
