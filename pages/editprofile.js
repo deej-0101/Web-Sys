@@ -31,10 +31,14 @@ import axios from 'axios';
 const useStyles = makeStyles(styles);
 const fetcher = url => fetch(url).then(res => res.json())
 
+const phoneRegExp = /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/
+
 const validationSchema = yup.object({
   name: yup.string().required('Name is required'),
   email: yup.string().email('Email is invalid').required('Email is required'),
   bio: yup.string().required('Message is required'),
+  school: yup.string().required('School is required'),
+  contact: yup.string().matches(phoneRegExp, 'Phone number is not valid').min(11),
 });
 
 export default function EditProfile() {
@@ -45,6 +49,8 @@ const handleSubmit = (values, { setSubmitting }) => {
   formData.append("name", values.name);
   formData.append("email", values.email);
   formData.append("bio", values.bio);
+  formData.append("school", values.school);
+  formData.append("contact", values.contact);
 
 
   axios
@@ -104,6 +110,8 @@ const handleSubmit = (values, { setSubmitting }) => {
                       formData.append("name", values.name);
                       formData.append("email", values.email);
                       formData.append("bio", values.bio);
+                      formData.append("school", values.school);
+                      formData.append("contact", values.contact);
                       axios
                       .post("/api/update-user", formData, {
                           headers: {
@@ -151,8 +159,26 @@ const handleSubmit = (values, { setSubmitting }) => {
                         <GridItem xs={12} sm={12} md={6}>
                           <Field
                             as={TextField}
+                            name="school"
+                            label="Enter your school/university"
+                            fullWidth
+                            required
+                          />
+                        </GridItem>
+                        <GridItem xs={12} sm={12} md={6}>
+                          <Field
+                            as={TextField}
+                            name="contact"
+                            label="Enter valid contact number"
+                            fullWidth
+                            required
+                          />
+                        </GridItem>
+                        <GridItem xs={12} sm={12} md={6}>
+                          <Field
+                            as={TextField}
                             name="email"
-                            label="Enter your email"
+                            label="Enter valid email"
                             fullWidth
                             required
                           />

@@ -5,10 +5,10 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { name, email, bio } = req.body;
+  const { name, email, bio, school, contact } = req.body;
 
   try {
-    updateUserData({ name, email, bio });
+    updateUserData({ name, email, bio, school, contact });
     return res.status(200).json({ message: 'User updated successfully' });
   } catch (error) {
     console.error(error);
