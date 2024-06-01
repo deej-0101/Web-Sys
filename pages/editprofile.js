@@ -112,35 +112,34 @@ const handleSubmit = (values, { setSubmitting }) => {
                       formData.append("bio", values.bio);
                       formData.append("school", values.school);
                       formData.append("contact", values.contact);
-                      axios
-                      .post("/api/update-user", formData, {
+                      axios.post("/api/update-user", formData, {
+                        headers: {
+                          'Content-Type': 'ultipart/form-data;',
+                        },
+                      })
+                      .then((response) => {
+                        console.log(response.data);
+                        setSubmitting(false);
+                        // Update the JSON file with the form data
+                        fetch("/api/update-json", {
+                          method: "POST",
+                          body: values, // no need to stringify the JSON object
                           headers: {
-                            'Content-Type': 'ultipart/form-data',
+                            "Content-Type": "application/json",
                           },
                         })
-                      .then((response) => {
-                          console.log(response.data);
-                          setSubmitting(false);
-                          // Update the JSON file with the form data
-                          fetch("/api/update-json", {
-                            method: "POST",
-                            body: JSON.stringify(values),
-                            headers: {
-                              "Content-Type": "application/json",
-                            },
-                          })
-                          .then((response) => response.json())
-                          .then((data) => {
-                              console.log(data);
-                            })
-                          .catch((error) => {
-                              console.error(error);
-                            });
+                       .then((response) => response.json())
+                       .then((data) => {
+                          console.log(data);
                         })
-                      .catch((error) => {
+                       .catch((error) => {
                           console.error(error);
-                          setSubmitting(false);
                         });
+                      })
+                      .catch((error) => {
+                        console.error(error);
+                        setSubmitting(false);
+                      });
                     }}
                     method="post"
                   >
